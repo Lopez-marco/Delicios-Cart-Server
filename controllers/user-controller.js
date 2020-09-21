@@ -90,13 +90,14 @@ router.put("/user/edit", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-// Delete User - REVISIT Delete User
-// router.delete("/user/delete", (req, res) => {
-//   const query = { where { user: req.user.id }}
+// Delete User
+router.delete("/user/delete", (req, res) => {
+  const query = { where: { username: req.user.username } };
 
-//   user.destroy(query)
-//   .then(() => res.status(200).json({ message: "User successfully deleted" }))
-//   .catch((err) => res.status(500).json({ error: err}));
-// })
+  user
+    .destroy(query)
+    .then(() => res.status(200).json({ message: "User successfully deleted" }))
+    .catch((err) => res.status(500).json({ error: err }));
+});
 
 module.exports = router;
