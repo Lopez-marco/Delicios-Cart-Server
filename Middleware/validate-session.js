@@ -6,7 +6,7 @@ const validateSession = (req, res, next) => {
     if (!token) {
         return res.status(500).send({ auth: false, message: 'No token provided.' });
     } else {
-        jwt.verify(token, process.env.JWT_KEY, (err, decodedToken) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
             if (!err && decodedToken) {
                 models.user.findOne({
                     where: {
