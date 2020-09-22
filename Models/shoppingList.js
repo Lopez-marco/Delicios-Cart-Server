@@ -10,7 +10,6 @@ module.exports = (sequelize) => {
         quantity:
         {
             type: DataTypes.INTEGER,
-            allowNull: false,
             defaultValue: 1
         },
         category:
@@ -20,7 +19,6 @@ module.exports = (sequelize) => {
         },
         bought: {
             type: DataTypes.BOOLEAN,
-            allowNull: false,
             defaultValue: false
         }
     });
