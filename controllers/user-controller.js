@@ -58,42 +58,42 @@ router.post("/login", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-// Get All Users
-router.get("/all-users", (req, res) => {
-  User.findAll()
-    .then((Users) => {
-      res.json(Users);
-    })
-    .catch((err) => {
-      res.send("error: " + err);
-    });
-});
+// // Get All Users
+// router.get("/all-users", (req, res) => {
+//   User.findAll()
+//     .then((Users) => {
+//       res.json(Users);
+//     })
+//     .catch((err) => {
+//       res.send("error: " + err);
+//     });
+// });
 
-// Update User
-router.put("/user/edit", (req, res) => {
-  const userEdit = {
-    id: req.body.user.id,
-    username: req.body.user.username,
-    email: req.body.user.email,
-    password: req.body.user.password,
-    account_type: req.body.user.account_type,
-  };
-  user
-    .update(userEdit, { where: { id: req.user.id } })
-    .then((userEdit) => {
-      res.status(200).json({ message: "User updated." });
-    })
-    .catch((err) => res.status(500).json(err));
-});
+// // Update User
+// router.put("/user/edit", (req, res) => {
+//   const userEdit = {
+//     id: req.body.user.id,
+//     username: req.body.user.username,
+//     email: req.body.user.email,
+//     password: req.body.user.password,
+//     account_type: req.body.user.account_type,
+//   };
+//   user
+//     .update(userEdit, { where: { id: req.user.id } })
+//     .then((userEdit) => {
+//       res.status(200).json({ message: "User updated." });
+//     })
+//     .catch((err) => res.status(500).json(err));
+// });
 
-// Delete User
-router.delete("/user/delete", (req, res) => {
-  const query = { where: { username: req.user.username } };
+// // Delete User
+// router.delete("/user/delete", (req, res) => {
+//   const query = { where: { username: req.user.username } };
 
-  user
-    .destroy(query)
-    .then(() => res.status(200).json({ message: "User successfully deleted" }))
-    .catch((err) => res.status(500).json({ error: err }));
-});
+//   user
+//     .destroy(query)
+//     .then(() => res.status(200).json({ message: "User successfully deleted" }))
+//     .catch((err) => res.status(500).json({ error: err }));
+// });
 
 module.exports = router;
