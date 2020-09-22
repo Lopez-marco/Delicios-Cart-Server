@@ -23,8 +23,8 @@ router.post('/addcoupon', validateSession, async (req, res) => {
 
 //Delete Coupon
 
-router.delete('/delete/:coupon', (req, res) => {
-    models.coupon.destroy({ where: { id: req.params.item } })
+router.delete('/delete/:id', validateSession, (req, res) => {
+    models.coupons.destroy({ where: { id: req.params.id } })
         .then(deleted => {
             if (deleted > 0) {
                 res.status(200).json({ message: 'Coupon deleted.' })
@@ -37,8 +37,8 @@ router.delete('/delete/:coupon', (req, res) => {
 
 ///Get all Coupons
 
-router.get('/', validateSession, (req, res) => {
-    models.coupon.findAll({ where: { userId: req.user.id }, order: [['id', 'ASC']] })
+router.get('/addedcoupons', validateSession, (req, res) => {
+    models.coupons.findAll({ where: { userId: req.user.id }, order: [['id', 'ASC']] })
         .then(items => {
             if (items.length > 0) {
                 res.status(200).json(items);
