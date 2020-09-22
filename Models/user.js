@@ -12,15 +12,18 @@ module.exports = (sequelize) => {
       allowNull: false,
       unique: true,
     },
-    password: DataTypes.STRING,
-    favorite_store: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+    },
+    favorite_store: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     account_type: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-      allowNull: false,
     },
   });
 };
