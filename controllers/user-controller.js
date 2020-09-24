@@ -58,6 +58,19 @@ router.post("/login", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
+// admin, sell all users
+router.get("/view-all", (req, res) => {
+  models.user
+    .findAll()
+    .then((users) => res.status(200).json(users))
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ error: err, message: "Error displaying all users" })
+    );
+});
+
+// delete
 router.delete("/delete/:id", function (req, res) {
   console.log(req.params.id);
   models.user
