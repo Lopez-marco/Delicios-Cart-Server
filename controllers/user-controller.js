@@ -1,15 +1,15 @@
 let router = require("express").Router();
 let { models } = require("../db");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+let jwt = require("jsonwebtoken");
+let bcrypt = require("bcryptjs");
 
-// Add User
+//create a user
 router.post("/add-user", (req, res) => {
   models.user
     .create({
-      username: req.body.user.username,
-      email: req.body.user.email,
-      password: bcrypt.hashSync(req.body.user.password, 13),
+      username: req.body.username,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 13),
     })
     .then(function userCreated(user) {
       let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
@@ -26,7 +26,7 @@ router.post("/add-user", (req, res) => {
     .catch((err) => res.status(500).json({ error: err }));
 });
 
-// Login
+//login
 router.post("/login", (req, res) => {
   models.user
     .findOne({
@@ -58,42 +58,18 @@ router.post("/login", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-// // Get All Users
-// router.get("/all-users", (req, res) => {
-//   User.findAll()
-//     .then((Users) => {
-//       res.json(Users);
-//     })
-//     .catch((err) => {
-//       res.send("error: " + err);
-//     });
-// });
-
-// // Update User
-// router.put("/user/edit", (req, res) => {
-//   const userEdit = {
-//     id: req.body.user.id,
-//     username: req.body.user.username,
-//     email: req.body.user.email,
-//     password: req.body.user.password,
-//     account_type: req.body.user.account_type,
-//   };
-//   user
-//     .update(userEdit, { where: { id: req.user.id } })
-//     .then((userEdit) => {
-//       res.status(200).json({ message: "User updated." });
-//     })
-//     .catch((err) => res.status(500).json(err));
-// });
-
-// // Delete User
-// router.delete("/user/delete", (req, res) => {
-//   const query = { where: { username: req.user.username } };
-
-//   user
-//     .destroy(query)
-//     .then(() => res.status(200).json({ message: "User successfully deleted" }))
-//     .catch((err) => res.status(500).json({ error: err }));
-// });
+router.delete("/delete/:id", function (req, res) {
+  console.log(req.params.id);
+  models.user
+    .findOne({
+      where: {
+        id: req.params.id,
+      },
+    })
+    .then((selectedUser) => {
+      selectedUser.destroy();
+    })
+    .catch((err) => res.status(500).json(err));
+});
 
 module.exports = router;
