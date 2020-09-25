@@ -12,9 +12,7 @@ router.post('/add-quick', validateSesh, async (req, res) => {
     });
     user.addShoppingList(item)
         .then(function itemAdded() {
-            res.status(200).json({
-                message: `Item added to list!`,
-            });
+            res.status(200).send(1);
         }
         )
         .catch(err => res.status(500).json({ error: err }))
