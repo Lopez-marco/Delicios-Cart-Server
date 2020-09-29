@@ -1,9 +1,10 @@
 let router = require("express").Router();
-let { models } = require("../db");
+// let { models } = require("../db");
+let User = require("../db").import("../models/user");
 let jwt = require("jsonwebtoken");
 let bcrypt = require("bcryptjs");
 
-//create a user
+//create a user *** Works in Postman ***
 router.post("/add-user", (req, res) => {
   models.user
     .create({
@@ -26,7 +27,7 @@ router.post("/add-user", (req, res) => {
     .catch((err) => res.status(500).json({ error: err }));
 });
 
-//login
+//login *** Works in Postman ***
 router.post("/login", (req, res) => {
   models.user
     .findOne({
@@ -58,7 +59,45 @@ router.post("/login", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-// admin, sell all users
+// user, update *** Does Not Work in Postman ***
+router.put("/user-update/:id", (req, res) => {
+  const updateUser = {
+    username: req.user.username,
+    email: req.user.email,
+    password: req.user.password,
+    favorite_store: req.user.favorite_store,
+    id: req.user.id,
+  };
+
+  const singleUserQuery = {
+    where: { id: req.params.id, username: req.user.username },
+  };
+
+  User.update(updateUser, singleUserQuery)
+    .then((user) => res.status(200).json(user))
+    .catch((err) => res.status(500).json({ error: err }));
+});
+
+// admin, update user *** Does Not Work in Postman ***
+router.put("/admin-user-update/:id", (req, res) => {
+  const adminUpdateUser = {
+    username: req.user.username,
+    email: req.user.email,
+    password: req.user.password,
+    account_type: req.user.accout_type,
+    id: req.user.id,
+  };
+
+  const adminUserQuery = {
+    where: { id: req.params.id, username: req.user.username },
+  };
+
+  User.update(adminUpdateUser, adminUserQuery)
+    .then((user) => res.status(200).json(user))
+    .catch((err) => res.status(500).json({ error: err }));
+});
+
+// admin, sell all users *** Work in Postman ***
 router.get("/view-all", (req, res) => {
   models.user
     .findAll()
@@ -70,7 +109,7 @@ router.get("/view-all", (req, res) => {
     );
 });
 
-// delete
+// delete ***** Not Correct *****
 router.delete("/delete/:id", function (req, res) {
   console.log(req.params.id);
   models.user
