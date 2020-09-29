@@ -1,6 +1,5 @@
 let router = require("express").Router();
-// let { models } = require("../db");
-let User = require("../db").import("../models/user");
+let { models } = require("../db");
 let jwt = require("jsonwebtoken");
 let bcrypt = require("bcryptjs");
 
@@ -73,7 +72,8 @@ router.put("/user-update/:id", (req, res) => {
     where: { id: req.params.id, username: req.user.username },
   };
 
-  User.update(updateUser, singleUserQuery)
+  models.user
+    .update(updateUser, singleUserQuery)
     .then((user) => res.status(200).json(user))
     .catch((err) => res.status(500).json({ error: err }));
 });
@@ -92,7 +92,8 @@ router.put("/admin-user-update/:id", (req, res) => {
     where: { id: req.params.id, username: req.user.username },
   };
 
-  User.update(adminUpdateUser, adminUserQuery)
+  models.user
+    .update(adminUpdateUser, adminUserQuery)
     .then((user) => res.status(200).json(user))
     .catch((err) => res.status(500).json({ error: err }));
 });
