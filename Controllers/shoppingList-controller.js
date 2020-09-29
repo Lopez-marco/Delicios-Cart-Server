@@ -66,12 +66,12 @@ router.put('/edit/:item', (req, res) => {
 })
 
 //update item bought(bool) property
-router.put('/edit/:id', (req, res) => {
-    const itemEdit = { bought } = req.body;
+router.put('/edit-check/:id', (req, res) => {
+    const itemEdit = req.body.bought;
     
     models.shoppingList.update(itemEdit, { where: { id: req.params.id } })
             .then(updated => { res.status(200).json(updated) })
-            .catch(err => res.status(500).json(err))
+            .catch(err => res.status(500).json({message: err.message}))
 })
 
 //delete an item
