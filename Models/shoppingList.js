@@ -20,6 +20,11 @@ module.exports = (sequelize) => {
         bought: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
-        }
+        },
+        order:
+        {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
     });
 }
