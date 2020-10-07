@@ -58,7 +58,7 @@ router.post("/login", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-// user, update *** Does Not Work in Postman ***
+// user, update *** Test in Postman ***
 router.put("/user-update/:id", (req, res) => {
   const updateUser = {
     username: req.user.username,
@@ -78,27 +78,29 @@ router.put("/user-update/:id", (req, res) => {
     .catch((err) => res.status(500).json({ error: err }));
 });
 
-// admin, update user *** Does Not Work in Postman ***
+// admin, update user *** Needs Tested in Postman ***
 router.put("/admin-user-update/:id", (req, res) => {
-  const adminUpdateUser = {
-    username: req.user.username,
-    email: req.user.email,
-    password: req.user.password,
-    account_type: req.user.accout_type,
-    id: req.user.id,
-  };
+  const account_type = req.user.account_type;
+  if (account_type === true) {
+    const adminUpdateUser = {
+      username: req.body.user.username,
+      email: req.body.user.email,
+      password: bcrypt.hashSync(req.body.user.password, 13),
+      account_type: req.body.user.account_type,
+    };
+    const adminUpdateUserQuery = { where: { id: req.params.id } };
 
-  const adminUserQuery = {
-    where: { id: req.params.id, username: req.user.username },
-  };
-
-  models.user
-    .update(adminUpdateUser, adminUserQuery)
-    .then((user) => res.status(200).json(user))
-    .catch((err) => res.status(500).json({ error: err }));
+    User.update(adminUpdateUser, adminUpdateUserQuery)
+      .then((user) => res.status(200).json(user))
+      .catch((err) => res.status(500).json({ error: err }));
+  } else {
+    res.status(502).json({ error: "You are not authorized" });
+  }
 });
 
-// admin, sell all users *** Work in Postman ***
+// admin, sell all users
+
+/* THIS ONE WORKS IN POSTMAN
 router.get("/view-all", (req, res) => {
   models.user
     .findAll()
@@ -109,20 +111,42 @@ router.get("/view-all", (req, res) => {
         .json({ error: err, message: "Error displaying all users" })
     );
 });
+*/
 
-// delete ***** Not Correct *****
-router.delete("/delete/:id", function (req, res) {
-  console.log(req.params.id);
-  models.user
-    .findOne({
-      where: {
-        id: req.params.id,
-      },
-    })
-    .then((selectedUser) => {
-      selectedUser.destroy();
-    })
-    .catch((err) => res.status(500).json(err));
+// *** Needs Tested in Postman *** Added check on account_type
+router.get("/view-all", (req, res) => {
+  const account_type = req.user.account_type;
+  if (account_type === true) {
+    models.user
+      .findAll()
+      .then((users) => res.status(200).json(users))
+      .catch((err) =>
+        res
+          .status(500)
+          .json({ error: err, message: "Error displaying all users" })
+      );
+  } else {
+    res.status(502).json({ error: "You are not authorized" });
+  }
+});
+
+// delete ***** Needs Tested in Postman *****
+router.delete("/delete/:id", (req, res) => {
+  const account_type = req.user.account_type;
+  if (account_type === true) {
+    models.user
+      .findOne({
+        where: {
+          id: req.params.id,
+        },
+      })
+      .then((selectedUser) => {
+        selectedUser.destroy();
+      })
+      .catch((err) => res.status(500).json(err));
+  } else {
+    res.status(502).json({ error: "You are not authorized" });
+  }
 });
 
 module.exports = router;
