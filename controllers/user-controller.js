@@ -113,30 +113,16 @@ router.get("/view-all", validateSession, (req, res) => {
   }
 });
 
-// delete ***** Check This *****
-
-/* 
-
-Tested in Postman.
-User deleted from database.
-However, request kept showing as sending in Postman.
-
-*/
-router.delete("/delete/:id", validateSession, (req, res) => {
-  const account_type = req.user.account_type;
+// delete ***** Works in Postman *****
+router.delete("/delete/:id", validateSession, async (req, res) => {
+  const account_type = await req.user.account_type;
   if (account_type === true) {
+    const userDeleteQuery = { where: { id: req.params.id } };
+
     models.user
-      .findOne({
-        where: {
-          id: req.params.id,
-        },
-      })
-      .then((selectedUser) => {
-        selectedUser.destroy();
-      })
-      .catch((err) => res.status(500).json(err));
-  } else {
-    res.status(502).json({ error: "You are not authorized" });
+      .destroy(userDeleteQuery)
+      .then(() => res.status(200).json({ message: "User Removed" }))
+      .catch((err) => res.status(500).json({ error: err }));
   }
 });
 
