@@ -2,6 +2,7 @@ let router = require("express").Router();
 let { models } = require("../db");
 let jwt = require("jsonwebtoken");
 let bcrypt = require("bcryptjs");
+let validateSession = require("../Middleware/validate-session");
 
 //create a user *** Works in Postman ***
 router.post("/add-user", (req, res) => {
@@ -58,18 +59,17 @@ router.post("/login", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-// user, update *** Test in Postman ***
-router.put("/user-update/:id", (req, res) => {
+// user, update *** Works in Postman ***
+router.put("/user-update", validateSession, (req, res) => {
   const updateUser = {
-    username: req.user.username,
-    email: req.user.email,
-    password: req.user.password,
-    favorite_store: req.user.favorite_store,
-    id: req.user.id,
+    // username: req.body.user.username,
+    // email: req.body.user.email,
+    // password: req.body.user.password,
+    favorite_store: req.body.user.favorite_store,
   };
 
   const singleUserQuery = {
-    where: { id: req.params.id, username: req.user.username },
+    where: { id: req.user.id },
   };
 
   models.user
@@ -78,19 +78,17 @@ router.put("/user-update/:id", (req, res) => {
     .catch((err) => res.status(500).json({ error: err }));
 });
 
-// admin, update user *** Needs Tested in Postman ***
-router.put("/admin-user-update/:id", (req, res) => {
+// admin, update user *** Works in Postman ***
+router.put("/admin-user-update/:id", validateSession, (req, res) => {
   const account_type = req.user.account_type;
   if (account_type === true) {
     const adminUpdateUser = {
-      username: req.body.user.username,
-      email: req.body.user.email,
-      password: bcrypt.hashSync(req.body.user.password, 13),
       account_type: req.body.user.account_type,
     };
     const adminUpdateUserQuery = { where: { id: req.params.id } };
 
-    User.update(adminUpdateUser, adminUpdateUserQuery)
+    models.user
+      .update(adminUpdateUser, adminUpdateUserQuery)
       .then((user) => res.status(200).json(user))
       .catch((err) => res.status(500).json({ error: err }));
   } else {
@@ -98,23 +96,8 @@ router.put("/admin-user-update/:id", (req, res) => {
   }
 });
 
-// admin, sell all users
-
-/* THIS ONE WORKS IN POSTMAN
-router.get("/view-all", (req, res) => {
-  models.user
-    .findAll()
-    .then((users) => res.status(200).json(users))
-    .catch((err) =>
-      res
-        .status(500)
-        .json({ error: err, message: "Error displaying all users" })
-    );
-});
-*/
-
-// *** Needs Tested in Postman *** Added check on account_type
-router.get("/view-all", (req, res) => {
+// admin, sell all users *** Works in Postman ***
+router.get("/view-all", validateSession, (req, res) => {
   const account_type = req.user.account_type;
   if (account_type === true) {
     models.user
@@ -130,8 +113,16 @@ router.get("/view-all", (req, res) => {
   }
 });
 
-// delete ***** Needs Tested in Postman *****
-router.delete("/delete/:id", (req, res) => {
+// delete ***** Check This *****
+
+/* 
+
+Tested in Postman.
+User deleted from database.
+However, request kept showing as sending in Postman.
+
+*/
+router.delete("/delete/:id", validateSession, (req, res) => {
   const account_type = req.user.account_type;
   if (account_type === true) {
     models.user
