@@ -11,6 +11,7 @@ router.post("/add-user", (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 13),
+      favorite_store: req.body.favorite_store,
     })
     .then(function userCreated(user) {
       let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
@@ -21,6 +22,7 @@ router.post("/add-user", (req, res) => {
         dataAdded_user: user.username,
         dataAdded_email: user.email,
         dataAdded_pass: user.password,
+        dataAdded_pass: user.account_type,
         sessionToken: token,
       });
     })
