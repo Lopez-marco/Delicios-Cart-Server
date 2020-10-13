@@ -128,4 +128,6 @@ router.delete("/delete/:id", validateSession, async (req, res) => {
   }
 });
 
+// user controller tested in Postman
+
 module.exports = router;
