@@ -2,6 +2,8 @@ let router = require('express').Router();
 let { models } = require('../db');
 let validateSesh = require('../Middleware/validate-session');
 
+
+
 //add an item (quick)
 router.post('/add-quick', validateSesh, async (req, res) => {
     let item = await models.shoppingList.create({
