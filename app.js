@@ -13,13 +13,22 @@ sequelize.sync();
 app.use(require('./middleware/headers'));
 
 
-app.get("/faboritestore/:lat/:lng", async (req, res) => {
+app.get("/faboritestore/:lat/:lng/", async (req, res) => {
     const APIKEY = "AIzaSyC8SxWx5derhovl8nfdFbYxhMR5r_mH7ww";
     const apiURL = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${req.params.lat},${req.params.lng}&radius=32186&type=supermarket&keyword=walmart&key=${APIKEY}`;
     const fetch_response = await fetch(apiURL);
     const json = await fetch_response.json();
     res.json(json);
 });
+
+app.get("/near/:lat/:lng:value", async (req, res) => {
+    const APIKEY = "AIzaSyC8SxWx5derhovl8nfdFbYxhMR5r_mH7ww";
+    const apiURL = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${req.params.lat},${req.params.lng}&radius=32186&type=supermarket&keyword=${req.params.value}&key=${APIKEY}`;
+    const fetch_response = await fetch(apiURL);
+    const json = await fetch_response.json();
+    res.json(json);
+});
+
 
 app.use('/user', user);
 app.use('/shopping-list', shoppingList);
