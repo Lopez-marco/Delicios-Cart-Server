@@ -3,8 +3,8 @@ let express = require('express');
 let app = express();
 let sequelize = require('./db');
 let user = require('./Controllers/user-controller');
-let lists = require('./Controllers/lists-controller');
 let shoppingList = require('./Controllers/shoppingList-controller');
+let items = require('./Controllers/item-controller');
 let categories = require('./Controllers/categories-controller');
 let coupons = require('./Controllers/coupon-controller')
 const fetch = require('node-fetch')
@@ -24,8 +24,8 @@ app.get("/faboritestore/:lat/:lng", async (req, res) => {
 });
 
 app.use('/user', user);
-app.use('/lists', lists);
 app.use('/shopping-list', shoppingList);
+app.use('/items', items);
 app.use('/categories', categories);
 app.use('/coupons', coupons)
 

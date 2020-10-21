@@ -1,14 +1,19 @@
 const { DataTypes } = require('sequelize');
+const { models } = require('../db');
 
 module.exports = (sequelize) => {
     sequelize.define('categories', {
-        categories:
+        category:
         {
-            type: DataTypes.ARRAY(DataTypes.TEXT),
-            allowNull: false,
-            defaultValue: ['Dairy', 'Vegetables/Fruits', 
-            'Meats/Fish', 'Bread/Bakery', 'Frozen Foods', 
-            'Personal Care', 'Cleaners/Paper Goods', 'Other']
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
         },
+        default:
+            {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
     });
-} 
+}
+

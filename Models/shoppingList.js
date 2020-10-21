@@ -1,19 +1,11 @@
 const { DataTypes } = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = (sequelize) => { 
     sequelize.define('shoppingList', {
-        item_name:
+        name: 
         {
             type: DataTypes.STRING,
-        },
-        quantity:
-        {
-            type: DataTypes.INTEGER,
-            defaultValue: 1
-        },
-        bought: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
+            allowNull: false,
         }
     });
 }
