@@ -40,7 +40,6 @@ router.post('/add-long', validateSesh, async (req, res) => {
         .catch(err => res.status(500).json({ error: err }))
 });
 
-
 //get all shopping lists
 router.get('/all', validateSesh, (req, res) => {
     models.shoppingList.findAll({ where: { userId: req.user.id }, order: [['id', 'ASC']] })
@@ -83,7 +82,6 @@ router.put('/edit/:id', (req, res) => {
         .catch(err => res.status(500).json(err))
 });
 
-
 //update item bought
 router.put('/update-item/:id', (req, res) => {
     const bought = req.body.bought;
@@ -98,10 +96,6 @@ router.put('/update-item/:id', (req, res) => {
             .then(updated => { res.status(200).json(updated) })
             .catch(err => res.status(500).json({message: err.message}))
 });
-
-
-
-
 
 //delete a list
 router.delete('/delete/:id', (req, res) => {
