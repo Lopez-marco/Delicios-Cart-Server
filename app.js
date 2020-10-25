@@ -4,6 +4,8 @@ let app = express();
 let sequelize = require('./db');
 let user = require('./Controllers/user-controller');
 let shoppingList = require('./Controllers/shoppingList-controller');
+let items = require('./Controllers/item-controller');
+let categories = require('./Controllers/categories-controller');
 let coupons = require('./Controllers/coupon-controller')
 const fetch = require('node-fetch')
 
@@ -32,6 +34,8 @@ app.get("/near/:lat/:lng:value", async (req, res) => {
 
 app.use('/user', user);
 app.use('/shopping-list', shoppingList);
+app.use('/items', items);
+app.use('/categories', categories);
 app.use('/coupons', coupons)
 
 app.listen(3001, () => console.log('*** APP LISTENING ON PORT 3001 ***'))
