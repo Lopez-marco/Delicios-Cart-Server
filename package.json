@@ -11,9 +11,7 @@
   },
   "author": "Team JAM",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^1.19.4"
-  },
+  "devDependencies": {},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.0.0",
