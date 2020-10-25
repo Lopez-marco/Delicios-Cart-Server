@@ -46,7 +46,6 @@ router.get('/all', validateSesh, (req, res) => {
         .then(shoppingList => {
             if (shoppingList.length > 0) {
                 res.status(200).json(shoppingList);
-
             } else {
                 res.status(420).json([]);
             }
