@@ -6,10 +6,7 @@ const Categories = require('./Models/categories');
 const Coupons = require('./Models/coupons');
 
 const sequelize = new Sequelize(
-    'delicioso-cart-server',
-    'postgres',
-    'password', {
-    host: 'localhost',
+    process.env.DATABASE_URL, {
     dialect: 'postgres'
 });
 
