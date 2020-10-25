@@ -2,21 +2,29 @@ let router = require('express').Router();
 let { models } = require('../db');
 let validateSesh = require('../Middleware/validate-session');
 
-//add an item (quick)
-router.post('/add-quick', validateSesh, async (req, res) => {
-    let item = await models.shoppingList.create({
-        item_name: req.body.item_name
-    });
+//add a list
+router.post('/add-list', validateSesh, async (req, res) => {
+    let shoppingList = await models.shoppingList.create({
+        name: req.body.name
+    })
     let user = await models.user.findOne({
         where: { id: req.user.id }
     });
+
     user.addShoppingList(item)
         .then(function itemAdded() {
             res.status(200).send(1);
+
+    user.addShoppingList(shoppingList)
+        .then(function shoppingListAdded() {
+            res.status(200).json({
+                message: `List added.`,
+            });
         }
         )
         .catch(err => res.status(500).json({ error: err }))
 })
+
 
 //add an item (long)
 router.post('/add-long', validateSesh, async (req, res) => {
@@ -42,6 +50,14 @@ router.get('/',validateSesh, (req, res) => {
         .then(items => {
             if (items.length > 0) {
                 res.status(200).json(items);
+
+//get all shopping lists
+router.get('/all', validateSesh, (req, res) => {
+    models.shoppingList.findAll({ where: { userId: req.user.id }, order: [['id', 'ASC']] })
+        .then(shoppingList => {
+            if (shoppingList.length > 0) {
+                res.status(200).json(shoppingList);
+
             } else {
                 res.status(420).json([]);
             }
@@ -49,21 +65,34 @@ router.get('/',validateSesh, (req, res) => {
         .catch(err => res.status(500).json(err))
 });
 
-//update an item
-router.put('/edit/:item', (req, res) => {
-    const itemEdit = {
-        item_name, quantity, category
-    } = req.body;
-    models.shoppingList.update(itemEdit, { where: { id: req.params.item } })
+//get one specific shopping list items
+router.get('/list/:id', async (req, res) => {
+        try {
+            const list = await models.shoppingList.findByPk(req.params.id, { include: models.item, order: [[models.item ,'order', 'ASC']] } );
+            if (list) {
+                res.status(200).json(list);
+            } else {
+                res.status(420).json([]);
+            }
+        } catch (err) {
+            res.status(500).json(err);
+        }
+});
+
+//update a list name
+router.put('/edit/:id', (req, res) => {
+    const listEdit = { name } = req.body;
+    models.shoppingList.update(listEdit, { where: { id: req.params.id } })
         .then(updated => {
             if (updated > 0) {
-                res.status(200).json({ message: 'Item updated.' })
+                res.status(200).json({ message: 'List updated.' })
             } else {
-                res.status(500).json({ message: 'Item not found, no updates performed.' })
+                res.status(500).json({ message: 'List not found, no updates performed.' })
             }
         })
         .catch(err => res.status(500).json(err))
 })
+
 
 //update item (bool) property
 router.put('/update-item/:id', (req, res) => {
@@ -71,16 +100,27 @@ router.put('/update-item/:id', (req, res) => {
     models.shoppingList.update(itemEdit, { where: { id: req.params.id } })
             .then(updated => { res.status(200).json(updated) })
             .catch(err => res.status(500).json({message: err.message}))
-})
 
-//delete an item
-router.delete('/delete/:item', (req, res) => {
-    models.shoppingList.destroy({ where: { id: req.params.item } })
+//delete a list
+router.delete('/delete/:id', (req, res) => {
+    models.shoppingList.destroy({ where: { id: req.params.id } })
         .then(deleted => {
             if (deleted > 0) {
-                res.status(200).json({ message: 'Item deleted.' })
+                res.status(200).json({ message: 'List deleted.' })
             } else {
-                res.status(500).json({ message: 'Item does not exist.' })
+                res.status(500).json({ message: 'List does not exist.' })
+            }
+        })
+        .catch(err => res.status(500).json(err))
+
+})
+
+//delete checked items in list
+router.delete('/delete-checked/', async (req, res) => {
+    models.item.destroy({ where: { id: req.body.checked } })
+        .then(deleted => {
+            if (deleted > 0) {
+                res.status(200).json({ message: 'Items deleted.' })
             }
         })
         .catch(err => res.status(500).json(err))
