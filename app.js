@@ -42,4 +42,4 @@ app.use('/items', items);
 app.use('/categories', categories);
 app.use('/coupons', coupons)
 
-app.listen(3001, () => console.log(`*** APP LISTENING ON PORT 3001*** ${process.env.PORT}`));
+app.listen(process.env.PORT, () => console.log(`*** APP LISTENING ON PORT 3001*** ${process.env.PORT}`));
