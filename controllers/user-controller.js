@@ -24,6 +24,7 @@ router.post("/add-user", (req, res) => {
         dataAdded_pass: user.password,
         dataAdded_pass: user.account_type,
         sessionToken: token,
+        favorite_store: user.favorite_store
       });
     })
     .catch((err) => res.status(500).json({ error: err }));
@@ -47,6 +48,7 @@ router.post("/login", (req, res) => {
             res.status(200).json({
               message: `User signed in succesfully`,
               sessionToken: token,
+              favorite_store: user.favorite_store
             });
           } else {
             res.status(505).json({
