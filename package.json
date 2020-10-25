@@ -6,13 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "auto": "npx nodemon server.js"
   },
   "author": "Team JAM",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^1.19.4"
-  },
+  "devDependencies": {},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.0.0",

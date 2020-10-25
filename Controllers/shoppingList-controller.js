@@ -10,6 +10,7 @@ router.post('/add-list', validateSesh, async (req, res) => {
     let user = await models.user.findOne({
         where: { id: req.user.id }
     });
+
     user.addShoppingList(shoppingList)
         .then(function shoppingListAdded() {
             res.status(200).json({
@@ -18,7 +19,26 @@ router.post('/add-list', validateSesh, async (req, res) => {
         }
         )
         .catch(err => res.status(500).json({ error: err }))
-})
+});
+
+
+//add an item (long)
+router.post('/add-long', validateSesh, async (req, res) => {
+    let item = await models.shoppingList.create({
+        item_name, quantity, category
+    } = req.body);
+    let user = await models.user.findOne({
+        where: { id: req.user.id }
+    });
+    user.addShoppingList(item)
+        .then(function itemAdded() {
+            res.status(200).json({
+                message: `Item added to list!`,
+            });
+        }
+        )
+        .catch(err => res.status(500).json({ error: err }))
+});
 
 //get all shopping lists
 router.get('/all', validateSesh, (req, res) => {
@@ -59,7 +79,22 @@ router.put('/edit/:id', (req, res) => {
             }
         })
         .catch(err => res.status(500).json(err))
-})
+});
+
+//update item bought
+router.put('/update-item/:id', (req, res) => {
+    const bought = req.body.bought;
+    models.shoppingList.update(bought, { where: { id: req.params.id } })
+            .then(updated => { res.status(200).json(updated) })
+            .catch(err => res.status(500).json({message: err.message}))
+});
+//update item order
+router.put('/update-item/:id', (req, res) => {
+    const order = req.body.order;
+    models.shoppingList.update(bought, { where: { id: req.params.id } })
+            .then(updated => { res.status(200).json(updated) })
+            .catch(err => res.status(500).json({message: err.message}))
+});
 
 //delete a list
 router.delete('/delete/:id', (req, res) => {
@@ -72,7 +107,8 @@ router.delete('/delete/:id', (req, res) => {
             }
         })
         .catch(err => res.status(500).json(err))
-})
+
+});
 
 //delete checked items in list
 router.delete('/delete-checked/', async (req, res) => {
@@ -83,6 +119,6 @@ router.delete('/delete-checked/', async (req, res) => {
             }
         })
         .catch(err => res.status(500).json(err))
-})
+});
 
 module.exports = router;
