@@ -12,9 +12,7 @@ router.post('/add-quick', validateSesh, async (req, res) => {
     });
     user.addShoppingList(item)
         .then(function itemAdded() {
-            res.status(200).json({
-                message: `Item added to list!`,
-            });
+            res.status(200).send(1);
         }
         )
         .catch(err => res.status(500).json({ error: err }))
@@ -40,7 +38,7 @@ router.post('/add-long', validateSesh, async (req, res) => {
 
 //get all items
 router.get('/',validateSesh, (req, res) => {
-    models.shoppingList.findAll({ where: {userId: req.user.id}, order: [['id', 'ASC']]} )
+    models.shoppingList.findAll({ where: {userId: req.user.id}, order: [['order', 'ASC']]} )
         .then(items => {
             if (items.length > 0) {
                 res.status(200).json(items);
@@ -67,13 +65,12 @@ router.put('/edit/:item', (req, res) => {
         .catch(err => res.status(500).json(err))
 })
 
-//update item bought(bool) property
-router.put('/edit/:id', (req, res) => {
-    const itemEdit = { bought } = req.body;
-    
+//update item (bool) property
+router.put('/update-item/:id', (req, res) => {
+    const itemEdit = req.body;
     models.shoppingList.update(itemEdit, { where: { id: req.params.id } })
             .then(updated => { res.status(200).json(updated) })
-            .catch(err => res.status(500).json(err))
+            .catch(err => res.status(500).json({message: err.message}))
 })
 
 //delete an item
