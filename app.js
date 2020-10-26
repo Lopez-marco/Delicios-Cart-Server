@@ -41,5 +41,4 @@ app.use('/shopping-list', shoppingList);
 app.use('/items', items);
 app.use('/categories', categories);
 app.use('/coupons', coupons)
-
 app.listen(process.env.PORT, () => console.log(`*** APP LISTENING ON ${process.env.PORT} ***`));
