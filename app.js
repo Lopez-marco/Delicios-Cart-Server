@@ -12,7 +12,7 @@ const fetch = require('node-fetch')
 app.use(express.json());
 sequelize.sync();
 
-app.use(require('./middleware/headers'));
+app.use(require('./Middleware/headers'));
 
 
 app.get("/fav/:lat/:lng/:favorite_store/", async (req, res) => {
